@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<!-- 菜单管理 -->
+<mapper namespace="com.zss.zframe.system.mapper.MenuMapper">
+
+	<resultMap id="MenuObject" type="com.zss.zframe.system.bean.Menu">
+		<id column="menu_id" property="menu_id" />
+		<result column="menu_name" property="menu_name" />
+		<result column="menu_url" property="menu_url" />
+		<result column="parent_id" property="parent_id" />
+		<result column="menu_type" property="menu_type" />
+		<result column="menu_order" property="menu_order" />
+		<result column="state" property="state" />
+	</resultMap>
+	
+	<resultMap id="TreeMenuObject" type="com.zss.zframe.system.bean.Menu">
+		<id column="menu_id" property="menu_id" />
+		<result column="menu_name" property="menu_name" />
+		<result column="menu_url" property="menu_url" />
+		<result column="parent_id" property="parent_id" />
+		<result column="menu_type" property="menu_type" />
+		<result column="menu_order" property="menu_order" />
+		<collection property="subs" ofType="com.zss.zframe.system.bean.Menu">
+			<id column="sub_menu_id" property="menu_id" />
+			<result column="sub_menu_name" property="menu_name" />
+			<result column="sub_menu_url" property="menu_url" />
+			<result column="sub_parent_id" property="parent_id" />
+			<result column="sub_menu_type" property="menu_type" />
+			<result column="sub_menu_order" property="menu_order" />
+		</collection>
+	</resultMap>
+
+	<!-- 菜单所有列表 -->
+	<select id="selectAllMenus" parameterType="java.util.HashMap" resultMap="MenuObject">
+		select
+		menu_id,
+		menu_name,
+		menu_url,
+		parent_id,
+		menu_type,
+		menu_order,
+		state
+		from
+		sys_menu
+		where
+		state != -1
+	</select>
+	
+	<!-- 查询树形菜单 -->
+	<select id="selectTreeMenus" resultMap="TreeMenuObject">
+		select
+			ta.menu_id,
+			ta.menu_name,
+			ta.menu_url,
+			ta.parent_id,
+			ta.menu_type,
+			ta.menu_order,
+			tb.menu_id as sub_menu_id,
+			tb.menu_name as sub_menu_name,
+			tb.menu_url as sub_menu_url,
+			tb.parent_id as sub_parent_id,
+			tb.menu_type as sub_menu_type,
+			tb.menu_order as sub_menu_order
+		from
+		(
+			select
+			menu_id,
+			menu_name,
+			menu_url,
+			parent_id,
+			menu_type,
+			menu_order
+			from
+			sys_menu
+			where
+			parent_id = 0
+			and state !=-1
+		) as ta
+		left join
+		(
+			select
+			menu_id,
+			menu_name,
+			menu_url,
+			parent_id,
+			menu_type,
+			menu_order
+			from
+			sys_menu
+		) as tb on ta.menu_id = tb.parent_id
+	</select>
+	
+	<!-- 获取父节点下面所有子节点 -->
+	<select id="selectListMenuByPId" parameterType="String" resultMap="MenuObject">
+		select
+		menu_id,
+		menu_name,
+		menu_url,
+		parent_id,
+		menu_type,
+		menu_order,
+		state
+		from
+		sys_menu
+		where
+		state != -1
+		and parent_id=#{parent_id}
+	</select>
+
+	<!-- 获取菜单 -->
+	<select id="selectMenuById" parameterType="String"
+		resultType="com.zss.zframe.system.bean.Menu">
+		select
+		menu_id,
+		menu_name,
+		menu_url,
+		parent_id,
+		menu_type,
+		menu_order,
+		state
+		from
+		sys_menu
+		where sys_menu=#{sys_menu}
+	</select>
+
+	<!-- 新增菜单 -->
+	<insert id="insertMenu" parameterType="java.util.HashMap" useGeneratedKeys="true" keyProperty="menu_id" >
+		insert into sys_menu (
+		menu_name,
+		menu_url,
+		parent_id,
+		menu_order
+		) values (
+		#{menu_name},
+		#{menu_url},
+		#{parent_id},
+		#{menu_order}
+		)
+	</insert>
+
+	<!-- 修改菜单 -->
+	<update id="updateMenu" parameterType="java.util.HashMap">
+		update sys_menu
+		set
+		menu_name=#{menu_name},
+		menu_url=#{menu_url},
+		parent_id=#{parent_id},
+		menu_order=#{menu_order}
+		where
+		menu_id=#{menu_id}
+	</update>
+
+	<!-- 删除菜单 -->
+	<update id="deleteMenu" parameterType="String">
+		update sys_menu
+		set
+		state=-1
+		where
+		menu_id=#{menu_id}
+	</update>
+
+</mapper>

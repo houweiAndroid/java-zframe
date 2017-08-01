@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 角色管理 -->
+<mapper namespace="com.zss.zframe.system.mapper.RoleMapper">
+
+	<resultMap id="RoleObject" type="com.zss.zframe.system.bean.Role">
+		<id column="role_id" property="role_id" />
+		<result column="role_name" property="role_name" />
+		<result column="state" property="state" />
+		<collection property="menus" ofType="com.zss.zframe.system.bean.Menu">
+			<id column="menu_id" property="menu_id" />
+			<result column="menu_name" property="menu_name" />
+			<result column="menu_url" property="menu_url" />
+			<result column="parent_id" property="parent_id" />
+			<result column="menu_type" property="menu_type" />
+			<result column="menu_order" property="menu_order" />
+		</collection>
+	</resultMap>
+
+	<!-- 角色所有列表 -->
+	<select id="selectAllRoles" parameterType="java.util.HashMap" resultMap="RoleObject">
+		select ta.*, tc.* from 
+		(
+		select
+		role_id,
+		role_name,
+		state
+		from
+		sys_role
+		where
+		state != -1
+		<if test="name != null and name != ''">
+			and role_name like concat(concat('%', #{name}),'%')
+		</if>
+		) as ta 
+		left join
+		sys_role_menu as tb 
+		on ta.role_id = tb.role_id
+		left join
+		sys_menu as tc 
+		on tb.menu_id = tc.menu_id
+	</select>
+
+	<!-- 获取角色 -->
+	<select id="selectRoleById" parameterType="String"
+		resultType="com.zss.zframe.system.bean.Role">
+		select
+		role_id,
+		role_name,
+		state
+		from
+		sys_role
+		where sys_role=#{sys_role}
+	</select>
+
+	<!-- 新增角色 -->
+	<insert id="insertRole" parameterType="java.util.HashMap" useGeneratedKeys="true" keyProperty="role_id" >
+		insert into sys_role (
+		role_name
+		) values (
+		#{role_name}
+		)
+	</insert>
+	
+	<!-- 新增角色菜单中间表 -->
+	<insert id="insertRoleMenu" parameterType="java.util.HashMap" >
+		insert into sys_role_menu (
+		role_id,
+		menu_id
+		) values (
+		#{role_id},
+		#{menu_id}
+		)
+	</insert>
+
+	<!-- 删除角色菜单中间表 -->
+	<delete id="deleteRoleMenu" parameterType="String">
+		delete from sys_role_menu
+		where
+		role_id=#{role_id}
+	</delete>
+	
+	<!-- 修改角色 -->
+	<update id="updateRole" parameterType="java.util.HashMap">
+		update sys_role
+		set
+		role_name=#{role_name}
+		where
+		role_id=#{role_id}
+	</update>
+
+	<!-- 删除角色 -->
+	<update id="deleteRole" parameterType="String">
+		update sys_role
+		set
+		state=-1
+		where
+		role_id=#{role_id}
+	</update>
+
+</mapper>

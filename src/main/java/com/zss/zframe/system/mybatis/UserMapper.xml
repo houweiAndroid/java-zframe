@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 用户管理 -->
+<mapper namespace="com.zss.zframe.system.mapper.UserMapper">
+
+	<resultMap id="UserObject" type="com.zss.zframe.system.bean.User">
+		<id column="user_id" property="user_id" />
+		<result column="user_name" property="user_name" />
+		<result column="real_name" property="real_name" />
+		<result column="nick_name" property="nick_name" />
+		<result column="last_login" property="last_login" />
+		<result column="ip_addr" property="ip_addr" />
+		<result column="state" property="state" />
+		<result column="email" property="email" />
+		<result column="phone" property="phone" />
+		<result column="remark" property="remark" />
+	</resultMap>
+
+	<!-- 用户所有列表 -->
+	<select id="selectAllUsers" parameterType="java.util.HashMap" resultMap="UserObject">
+		select
+		user_id,
+		user_name,
+		real_name,
+		nick_name,
+		last_login,
+		ip_addr,
+		state,
+		email,
+		phone,
+		remark
+		from
+		sys_user
+		where
+		state != -1
+		and user_name!='admin'
+		<if test="name != null and name != ''">
+			and 
+			(
+				user_name like concat(concat('%', #{name}),'%')
+				or 
+				real_name like concat(concat('%', #{name}),'%') 
+			)
+		</if>
+	</select>
+
+	<!-- 获取用户 -->
+	<select id="selectUserById" parameterType="String"
+		resultType="com.zss.zframe.system.bean.User">
+		select
+		user_id,
+		user_name,
+		real_name,
+		nick_name,
+		last_login,
+		ip_addr,
+		state,
+		email,
+		phone,
+		remark
+		from
+		sys_user
+		where user_id=#{user_id}
+	</select>
+
+	<!-- 新增用户 -->
+	<insert id="insertUser" parameterType="java.util.HashMap" useGeneratedKeys="true" keyProperty="user_id" >
+		insert into sys_user (
+		user_name,
+		password,
+		real_name,
+		nick_name,
+		ip_addr,
+		email,
+		phone,
+		remark
+		) values (
+		#{user_name},
+		#{password},
+		#{real_name},
+		#{nick_name},
+		#{ip_addr},
+		#{email},
+		#{phone},
+		#{remark}
+		)
+	</insert>
+
+	<!-- 修改用户 -->
+	<update id="updateUser" parameterType="java.util.HashMap">
+		update sys_user
+		set
+		user_name=#{user_name},
+		real_name=#{real_name},
+		nick_name=#{nick_name},
+		ip_addr=#{ip_addr},
+		email=#{email},
+		phone=#{phone},
+		remark=#{remark}
+		where
+		user_id=#{user_id}
+	</update>
+
+	<!-- 删除用户 -->
+	<update id="deleteUser" parameterType="String">
+		update sys_user
+		set
+		state=-1
+		where
+		user_id=#{user_id}
+	</update>
+
+	<!-- 用户登录 -->
+	<select id="sysLogin" parameterType="String"
+		resultType="com.zss.zframe.system.bean.User">
+		select
+		user_id,
+		user_name,
+		password,
+		real_name,
+		nick_name,
+		last_login,
+		ip_addr,
+		state,
+		email,
+		phone,
+		remark
+		from
+		sys_user
+		where user_name=#{user_name}
+	</select>
+</mapper>
