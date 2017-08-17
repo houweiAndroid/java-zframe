@@ -76,12 +76,12 @@
 			<groupId>org.springframework.session</groupId>
 			<artifactId>spring-session</artifactId>
 		</dependency>
-		<!-- redis
+		<!-- json rpc -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-redis</artifactId>
+		    <groupId>com.github.briandilley.jsonrpc4j</groupId>
+		    <artifactId>jsonrpc4j</artifactId>
+		    <version>1.5.0</version>
 		</dependency>
-		 -->
 	</dependencies>
 
 	<build>
