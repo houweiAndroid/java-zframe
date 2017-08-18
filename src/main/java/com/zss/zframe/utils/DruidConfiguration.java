@@ -1,5 +1,6 @@
 package com.zss.zframe.utils;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import com.alibaba.druid.pool.DruidDataSource;
 
 @Configuration
+@MapperScan(value = "com.zss.zframe.*.mapper")
 public class DruidConfiguration {
 	
 	@ConditionalOnClass(DruidDataSource.class)
