@@ -25,4 +25,7 @@ public interface MenuService {
 	public int updateMenu(HashMap<String, Object> map);
 	
 	public int deleteMenu(String menu_id);
+	
+	public List<Menu> selectUserMenu(String user_id);
+	
 }

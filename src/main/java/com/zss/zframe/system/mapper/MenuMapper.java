@@ -21,4 +21,6 @@ public interface MenuMapper {
 	
 	public int deleteMenu(String menu_id);
 	
+	public List<Menu> selectUserMenu(String user_id);
+	
 }

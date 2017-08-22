@@ -17,7 +17,9 @@ import com.github.pagehelper.PageInfo;
 import com.zss.zframe.base.BaseController;
 import com.zss.zframe.base.ObjectHttpRes;
 import com.zss.zframe.base.PageHttpRes;
+import com.zss.zframe.system.bean.Menu;
 import com.zss.zframe.system.bean.User;
+import com.zss.zframe.system.service.MenuService;
 import com.zss.zframe.system.service.UserService;
 import com.zss.zframe.utils.JsonUtils;
 
@@ -34,6 +36,9 @@ public class UserController extends BaseController {
 	
 	@Resource
 	private UserService service;
+	
+	@Resource
+	private MenuService menuService;
 
 	@RequestMapping("selectAllUsers.do")
 	@ResponseBody
@@ -134,8 +139,10 @@ public class UserController extends BaseController {
 		}
 		ObjectHttpRes res = new ObjectHttpRes();
 		User user = service.sysLogin(getMapValue("user_name"));
-		if(user != null && user.getUser_id() > 0){
+		if(user != null && user.getUser_id().compareTo("0") > 0){
 			if(user.getPassword().equals(getMapValue("password"))){
+				List<Menu> menus = menuService.selectUserMenu(user.getUser_id());
+				user.setMenus(menus);
 				user.setPassword("");
 				HttpSession http = request.getSession();
 				http.setAttribute("sys_user", user);

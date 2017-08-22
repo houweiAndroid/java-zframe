@@ -1,12 +1,14 @@
 package com.zss.zframe.system.bean;
 
+import java.util.List;
+
 /**
  * 用户管理
  * @author zm
  */
 public class User {
 	
-	private int user_id; //用户ID
+	private String user_id; //用户ID
 	private String user_name; //用户名
 	private String password; //用户密码
 	private String real_name; //真实姓名
@@ -17,11 +19,12 @@ public class User {
 	private String email; //邮箱
 	private String phone; //手机
 	private String remark; //备注
+	private List<Menu> menus; //用户权限菜单
 	
-	public int getUser_id() {
+	public String getUser_id() {
 		return user_id;
 	}
-	public void setUser_id(int user_id) {
+	public void setUser_id(String user_id) {
 		this.user_id = user_id;
 	}
 	public String getUser_name() {
@@ -84,5 +87,10 @@ public class User {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-	
+	public List<Menu> getMenus() {
+		return menus;
+	}
+	public void setMenus(List<Menu> menus) {
+		this.menus = menus;
+	}
 }

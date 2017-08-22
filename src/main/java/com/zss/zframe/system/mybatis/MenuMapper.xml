@@ -161,4 +161,15 @@
 		menu_id=#{menu_id}
 	</update>
 
+	<!-- 获取权限菜单 -->
+	<select id="selectUserMenu" parameterType="String"
+		resultMap="MenuObject">
+		select c.* from
+		(
+		select role_id from sys_user_role where user_id = #{user_id}
+		) a
+		left join sys_role_menu b on a.role_id = b.role_id
+		left join sys_menu c on b.menu_id = c.menu_id
+		where c.state != -1;
+	</select>
 </mapper>
