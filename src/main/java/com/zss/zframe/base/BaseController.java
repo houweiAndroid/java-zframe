@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.zss.zframe.system.controller.MenuController;
 import com.zss.zframe.utils.JsonUtils;
 
 public class BaseController {
@@ -18,7 +17,7 @@ public class BaseController {
 	
 	public HashMap<String, Object> reqMap = new HashMap<>();
 	
-	public static final Logger log = LoggerFactory.getLogger(MenuController.class);
+	public static final Logger log = LoggerFactory.getLogger(BaseController.class);
 
 	public String getErrorJson(String error) {
 		ObjectHttpRes result = new ObjectHttpRes();
