@@ -1,6 +1,6 @@
 package com.zss.zframe.base;
 
-import com.zss.zframe.utils.Constants;
+import com.zss.zframe.Constants;
 
 public class DataRes{
 	

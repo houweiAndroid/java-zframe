@@ -1,4 +1,4 @@
-package com.zss.zframe.utils;
+package com.zss.zframe;
 
 import java.util.HashMap;
 

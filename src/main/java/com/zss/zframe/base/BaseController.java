@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.zss.zframe.utils.Constants;
+import com.zss.zframe.Constants;
 import com.zss.zframe.utils.JsonUtils;
 
 

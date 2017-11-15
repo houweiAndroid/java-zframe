@@ -1,4 +1,4 @@
-package com.zss.zframe.utils;
+package com.zss.zframe;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

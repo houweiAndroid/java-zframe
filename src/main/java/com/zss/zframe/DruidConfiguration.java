@@ -1,4 +1,4 @@
-package com.zss.zframe.utils;
+package com.zss.zframe;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
