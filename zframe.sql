@@ -9,7 +9,7 @@
  Target Server Version : 50718
  File Encoding         : utf-8
 
- Date: 11/15/2017 17:34:43 PM
+ Date: 11/15/2017 19:24:55 PM
 */
 
 SET NAMES utf8;
@@ -64,13 +64,6 @@ CREATE TABLE `sys_role_menu` (
   `menu_id` int(11) NOT NULL COMMENT '权限ID',
   PRIMARY KEY (`role_id`,`menu_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
---  Records of `sys_role_menu`
--- ----------------------------
-BEGIN;
-INSERT INTO `sys_role_menu` VALUES ('1', '1'), ('1', '2'), ('1', '3'), ('1', '4'), ('1', '5'), ('1', '6'), ('1', '7'), ('1', '8'), ('1', '9'), ('1', '10'), ('1', '12'), ('1', '13'), ('1', '14'), ('1', '15'), ('1', '16'), ('1', '17'), ('1', '21'), ('1', '22'), ('1', '23'), ('2', '1'), ('2', '8'), ('3', '2'), ('3', '7'), ('3', '9'), ('4', '1'), ('4', '2'), ('4', '5'), ('4', '6'), ('4', '7'), ('4', '8'), ('4', '9');
-COMMIT;
 
 -- ----------------------------
 --  Table structure for `sys_user`
