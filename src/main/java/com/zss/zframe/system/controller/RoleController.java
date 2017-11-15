@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,8 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.PageInfo;
 import com.zss.zframe.base.BaseController;
-import com.zss.zframe.base.ObjectHttpRes;
-import com.zss.zframe.base.PageHttpRes;
+import com.zss.zframe.base.DataRes;
 import com.zss.zframe.system.bean.Role;
 import com.zss.zframe.system.service.RoleService;
 import com.zss.zframe.utils.JsonUtils;
@@ -34,91 +32,75 @@ public class RoleController extends BaseController {
 
 	@RequestMapping("selectAllRoles.do")
 	@ResponseBody
-	public String selectAllRoles(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String selectAllRoles(HttpServletRequest request) {
 		getHashMap(request);
-		if (!checkParamEmpty("page_index")) {
-			return getErrorMsg();
-		}
-		if (!checkParamEmpty("page_size")) {
-			return getErrorMsg();
-		}
-		PageHttpRes res = new PageHttpRes();
+		checkParamEmpty("page_index");
+		checkParamEmpty("page_size");
+		DataRes res = new DataRes();
 		PageInfo<List<Role>> info = service.selectAllRoles(
-				Integer.parseInt(getMapValue("page_index")),
-				Integer.parseInt(getMapValue("page_size")), reqMap);
+				Integer.parseInt(getReqValue("page_index")),
+				Integer.parseInt(getReqValue("page_size")), reqMap);
 		if (info == null) {
 			info = new PageInfo<List<Role>>();
 		}
-		res.setTotal(info.getTotal());
-		res.setResult(info.getList());
+		Map<String, Object> map = new HashMap<>(); 
+		map.put("totalCount", info.getTotal());
+		map.put("list", info.getList());
+		res.setData(map);
 		return JsonUtils.objToJackson(res);
 	}
 	
 	@RequestMapping("selectRoleById.do")
 	@ResponseBody
-	public String selectRoleById(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String selectRoleById(HttpServletRequest request) {
 		getHashMap(request);
-		if (!checkParamEmpty("role_id")) {
-			return getErrorMsg();
-		}
-		ObjectHttpRes res = new ObjectHttpRes();
-		Role role = service.selectRoleById(getMapValue("role_id"));
+		checkParamEmpty("role_id");
+		DataRes res = new DataRes();
+		Role role = service.selectRoleById(getReqValue("role_id"));
 		if(role == null){
 			role = new Role();
 		}
-		res.setResult(role);
+		res.setData(role);
 		return JsonUtils.objToJackson(res);
 	}
 	
 	@RequestMapping("insertRole.do")
 	@ResponseBody
-	public String insertRole(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String insertRole(HttpServletRequest request) {
 		getHashMap(request);
-		if (!checkParamEmpty("role_name")) {
-			return getErrorMsg();
-		}
-		if (!checkParamEmpty("menu_ids")) {
-			return getErrorMsg();
-		}
-		ObjectHttpRes res = new ObjectHttpRes();
+		checkParamEmpty("role_name");
+		checkParamEmpty("menu_ids");
+		DataRes res = new DataRes();
 		HashMap<String, Object> map = service.insertRole(reqMap);
-		res.setResult(map);
+		res.setData(map);
 		return JsonUtils.objToJackson(res);
 	}
 	
 	@RequestMapping("updateRole.do")
 	@ResponseBody
-	public String updateRole(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String updateRole(HttpServletRequest request) {
 		getHashMap(request);
-		if (!checkParamEmpty("role_id")) {
-			return getErrorMsg();
-		}
-		if (!checkParamEmpty("role_name")) {
-			return getErrorMsg();
-		}
-		if (!checkParamEmpty("menu_ids")) {
-			return getErrorMsg();
-		}
-		ObjectHttpRes res = new ObjectHttpRes();
+		checkParamEmpty("role_id");
+		checkParamEmpty("role_name");
+		checkParamEmpty("menu_ids");
+		DataRes res = new DataRes();
 		int count = service.updateRole(reqMap);
 		Map<String, Object> map = new HashMap<>(); 
 		map.put("record_cnt", count);
-		res.setResult(map);
+		res.setData(map);
 		return JsonUtils.objToJackson(res);
 	}
 	
 	@RequestMapping("deleteRole.do")
 	@ResponseBody
-	public String deleteRole(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String deleteRole(HttpServletRequest request) {
 		getHashMap(request);
-		if (!checkParamEmpty("role_id")) {
-			return getErrorMsg();
-		}
-		ObjectHttpRes res = new ObjectHttpRes();
-		int count = service.deleteRole(getMapValue("role_id"));
+		checkParamEmpty("role_id");
+		DataRes res = new DataRes();
+		int count = service.deleteRole(getReqValue("role_id"));
 		Map<String, Object> map = new HashMap<>(); 
 		map.put("record_cnt", count);
-		res.setResult(map);
+		res.setData(map);
 		return JsonUtils.objToJackson(res);
 	}
 	

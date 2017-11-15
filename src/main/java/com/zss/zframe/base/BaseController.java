@@ -9,24 +9,27 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.zss.zframe.utils.Constants;
 import com.zss.zframe.utils.JsonUtils;
 
-public class BaseController {
 
-	private String errorMsg;
+
+public class BaseController {
 	
-	public HashMap<String, Object> reqMap = new HashMap<>();
+public HashMap<String, Object> reqMap = new HashMap<>();
 	
 	public static final Logger log = LoggerFactory.getLogger(BaseController.class);
 
-	public String getErrorJson(String error) {
-		ObjectHttpRes result = new ObjectHttpRes();
-		result.setRet_code(-1);
-		result.setRet_error(error);
+	public String buildError(String paramName) {
+		DataRes result = new DataRes();
+		result.setCode(Constants.REQ_PARAM_NULL);
+		String msg = Constants.getError(Constants.REQ_PARAM_NULL);
+		String error = String.format(msg, paramName);
+		result.setError(error);
 		return JsonUtils.objToJackson(result);
 	}
 
-	public String getMapValue(String paramName) {
+	public String getReqValue(String paramName) {
 		Object value = reqMap.get(paramName);
 		if(value == null){
 			return "";
@@ -35,24 +38,21 @@ public class BaseController {
 		}
 	}
 
-	public boolean checkParamEmpty(String paramName) {
+	public void checkParamEmpty(String paramName) {
 		Object value = reqMap.get(paramName);
 		if (value == null) {
-			setErrorMsg(getErrorJson(("'" + paramName + "'差数不能为空")));
-			return false;
+			throw new RuntimeException(buildError(paramName));
 		}
-		return true;
 	}
 
 	public HashMap<String, Object> getHashMap(HttpServletRequest request) {
 		reqMap = new HashMap<String, Object>();
-		Map properties = request.getParameterMap();
-		Iterator entries = properties.entrySet().iterator();
-		Map.Entry entry;
+		Map maps = request.getParameterMap();
+		Iterator entries = maps.entrySet().iterator();
 		String name = "";
 		String value = "";
 		while (entries.hasNext()) {
-			entry = (Map.Entry) entries.next();
+			Map.Entry entry = (Map.Entry) entries.next();
 			name = (String) entry.getKey();
 			Object valueObj = entry.getValue();
 			if (null == valueObj) {
@@ -68,16 +68,8 @@ public class BaseController {
 			}
 			reqMap.put(name, value);
 		}
-		log.debug("---------reqMap = " + reqMap);
+		log.info("---------request param = " + reqMap);
 		return reqMap;
-	}
-
-	public String getErrorMsg() {
-		return errorMsg;
-	}
-
-	public void setErrorMsg(String errorMsg) {
-		this.errorMsg = errorMsg;
 	}
 
 }

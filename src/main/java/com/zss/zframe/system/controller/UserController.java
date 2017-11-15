@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.druid.util.StringUtils;
 import com.github.pagehelper.PageInfo;
 import com.zss.zframe.base.BaseController;
-import com.zss.zframe.base.ObjectHttpRes;
-import com.zss.zframe.base.PageHttpRes;
+import com.zss.zframe.base.DataRes;
 import com.zss.zframe.system.bean.Menu;
 import com.zss.zframe.system.bean.User;
 import com.zss.zframe.system.service.MenuService;
 import com.zss.zframe.system.service.UserService;
+import com.zss.zframe.utils.Constants;
 import com.zss.zframe.utils.JsonUtils;
 
 
@@ -42,131 +42,118 @@ public class UserController extends BaseController {
 
 	@RequestMapping("selectAllUsers.do")
 	@ResponseBody
-	public String selectAllUsers(HttpServletRequest request) throws Exception {
+	public String selectAllUsers(HttpServletRequest request) {
 		getHashMap(request);
-		if (!checkParamEmpty("page_index")) {
-			return getErrorMsg();
-		}
-		if (!checkParamEmpty("page_size")) {
-			return getErrorMsg();
-		}
-		PageHttpRes res = new PageHttpRes();
+		checkParamEmpty("page_index");
+		checkParamEmpty("page_size");
+		DataRes res = new DataRes();
 		PageInfo<List<User>> info = service.selectAllUsers(
-				Integer.parseInt(getMapValue("page_index")),
-				Integer.parseInt(getMapValue("page_size")), reqMap);
+				Integer.parseInt(getReqValue("page_index")),
+				Integer.parseInt(getReqValue("page_size")), reqMap);
 		if (info == null) {
 			info = new PageInfo<List<User>>();
 		}
-		res.setTotal(info.getTotal());
-		res.setResult(info.getList());
+		Map<String, Object> map = new HashMap<>(); 
+		map.put("totalCount", info.getTotal());
+		map.put("list", info.getList());
+		res.setData(map);
 		return JsonUtils.objToJackson(res);
 	}
 	
 	@RequestMapping("selectUserById.do")
 	@ResponseBody
-	public String selectUserById(HttpServletRequest request) throws Exception {
+	public String selectUserById(HttpServletRequest request) {
 		getHashMap(request);
-		if (!checkParamEmpty("user_id")) {
-			return getErrorMsg();
-		}
-		ObjectHttpRes res = new ObjectHttpRes();
-		User user = service.selectUserById(getMapValue("user_id"));
+		checkParamEmpty("user_id");
+		DataRes res = new DataRes();
+		User user = service.selectUserById(getReqValue("user_id"));
 		if(user == null){
 			user = new User();
 		}
-		res.setResult(user);
+		res.setData(user);
 		return JsonUtils.objToJackson(res);
 	}
 	
 	@RequestMapping("insertUser.do")
 	@ResponseBody
-	public String insertUser(HttpServletRequest request) throws Exception {
+	public String insertUser(HttpServletRequest request) {
 		getHashMap(request);
-		if (!checkParamEmpty("user_name")) {
-			return getErrorMsg();
-		}
-		if (StringUtils.isEmpty(getMapValue("password"))) {
+		checkParamEmpty("user_name");
+		if (StringUtils.isEmpty(getReqValue("password"))) {
 			reqMap.put("password", intPwd);
 		}
-		ObjectHttpRes res = new ObjectHttpRes();
+		DataRes res = new DataRes();
 		HashMap<String, Object> map = service.insertUser(reqMap);
-		res.setResult(map);
+		res.setData(map);
 		return JsonUtils.objToJackson(res);
 	}
 	
 	@RequestMapping("updateUser.do")
 	@ResponseBody
-	public String updateUser(HttpServletRequest request) throws Exception {
+	public String updateUser(HttpServletRequest request) {
 		getHashMap(request);
-		if (!checkParamEmpty("user_id")) {
-			return getErrorMsg();
-		}
-		if (!checkParamEmpty("user_name")) {
-			return getErrorMsg();
-		}
-		ObjectHttpRes res = new ObjectHttpRes();
+		checkParamEmpty("user_id");
+		checkParamEmpty("user_name");
+		DataRes res = new DataRes();
 		int count = service.updateUser(reqMap);
 		Map<String, Object> map = new HashMap<>(); 
 		map.put("record_cnt", count);
-		res.setResult(map);
+		res.setData(map);
 		return JsonUtils.objToJackson(res);
 	}
 	
 	@RequestMapping("deleteUser.do")
 	@ResponseBody
-	public String deleteUser(HttpServletRequest request) throws Exception {
+	public String deleteUser(HttpServletRequest request) {
 		getHashMap(request);
-		if (!checkParamEmpty("user_id")) {
-			return getErrorMsg();
-		}
-		ObjectHttpRes res = new ObjectHttpRes();
-		int count = service.deleteUser(getMapValue("user_id"));
+		checkParamEmpty("user_id");
+		DataRes res = new DataRes();
+		int count = service.deleteUser(getReqValue("user_id"));
 		Map<String, Object> map = new HashMap<>(); 
 		map.put("record_cnt", count);
-		res.setResult(map);
+		res.setData(map);
 		return JsonUtils.objToJackson(res);
 	}
 	
 	@RequestMapping("sysLogin.do")
 	@ResponseBody
-	public String sysLogin(HttpServletRequest request) throws Exception {
+	public String sysLogin(HttpServletRequest request) {
 		getHashMap(request);
-		if (!checkParamEmpty("user_name")) {
-			return getErrorMsg();
-		}
-		if (!checkParamEmpty("password")) {
-			return getErrorMsg();
-		}
-		ObjectHttpRes res = new ObjectHttpRes();
-		User user = service.sysLogin(getMapValue("user_name"));
+		checkParamEmpty("user_name");
+		checkParamEmpty("password");
+		DataRes res = new DataRes();
+		User user = service.sysLogin(getReqValue("user_name"));
 		if(user != null && user.getUser_id().compareTo("0") > 0){
-			if(user.getPassword().equals(getMapValue("password"))){
+			if(user.getPassword().equals(getReqValue("password"))){
 				List<Menu> menus = menuService.selectUserMenu(user.getUser_id());
 				user.setMenus(menus);
 				user.setPassword("");
 				HttpSession http = request.getSession();
 				http.setAttribute("sys_user", user);
-				res.setResult(user);
+				res.setData(user);
 				return JsonUtils.objToJackson(res);
 			} else{
-				return getErrorJson("密码不正确");
+				res.setCodeAndError(Constants.PWD_ERROR);
+				return JsonUtils.objToJackson(res);
 			}
 		}
-		return getErrorJson("用户不存在");
+		res.setCodeAndError(Constants.USER_NOT_EXIST);
+		return JsonUtils.objToJackson(res);
 	}
 	
 	@RequestMapping("isLogin.do")
 	@ResponseBody
-	public String isLogin(HttpServletRequest request) throws Exception {
-		ObjectHttpRes res = new ObjectHttpRes();
+	public String isLogin(HttpServletRequest request) {
+		DataRes res = new DataRes();
 		HttpSession http = request.getSession();
 		Object obj = http.getAttribute("sys_user");
 		if(obj != null){
 			User user = (User)obj;
-			res.setResult(user);
+			res.setData(user);
 			return JsonUtils.objToJackson(res);
 		} else {
-			return getErrorJson("会话超时");
+			res.setCodeAndError(Constants.LOGIN_TIMEOUT);
+			return JsonUtils.objToJackson(res);
 		}
 	}
 

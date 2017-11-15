@@ -1,7 +1,7 @@
 /*
  Navicat MySQL Data Transfer
 
- Source Server         : mac
+ Source Server         : find
  Source Server Version : 50718
  Source Host           : localhost
  Source Database       : zframe
@@ -9,7 +9,7 @@
  Target Server Version : 50718
  File Encoding         : utf-8
 
- Date: 08/18/2017 09:09:18 AM
+ Date: 11/15/2017 17:34:43 PM
 */
 
 SET NAMES utf8;
@@ -28,13 +28,13 @@ CREATE TABLE `sys_menu` (
   `menu_order` int(4) DEFAULT NULL COMMENT '排序',
   `state` int(4) NOT NULL DEFAULT '0' COMMENT '状态：0正常、-1废弃',
   PRIMARY KEY (`menu_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='系统菜单表';
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 COMMENT='系统菜单表';
 
 -- ----------------------------
 --  Records of `sys_menu`
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_menu` VALUES ('1', '系统管理', 'system', '0', '0', null, '0'), ('2', '客户管理', 'client', '0', '0', null, '0'), ('3', '日志管理', 'log', '0', '0', null, '0'), ('4', '基础数据', 'data', '0', '0', null, '0'), ('5', '菜单管理', 'system/menu', '1', '0', null, '0'), ('6', '用户管理', 'system/user', '1', '0', null, '0'), ('7', '注册客户', 'client/register', '2', '0', null, '0'), ('8', '角色管理', 'system/role', '1', '0', null, '0'), ('10', '操作记录', 'log/record', '3', '0', null, '0');
+INSERT INTO `sys_menu` VALUES ('1', '系统管理', '/system', '0', '0', null, '0'), ('2', '菜单管理', '/system/menu', '1', '0', null, '0'), ('3', '用户管理', '/system/user', '1', '0', null, '0'), ('4', '角色管理', '/system/role', '1', '0', null, '0');
 COMMIT;
 
 -- ----------------------------
@@ -69,7 +69,7 @@ CREATE TABLE `sys_role_menu` (
 --  Records of `sys_role_menu`
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_role_menu` VALUES ('1', '1'), ('1', '2'), ('1', '6'), ('1', '7'), ('2', '1'), ('2', '8'), ('3', '2'), ('3', '7'), ('3', '9'), ('4', '1'), ('4', '2'), ('4', '5'), ('4', '6'), ('4', '7'), ('4', '8'), ('4', '9');
+INSERT INTO `sys_role_menu` VALUES ('1', '1'), ('1', '2'), ('1', '3'), ('1', '4'), ('1', '5'), ('1', '6'), ('1', '7'), ('1', '8'), ('1', '9'), ('1', '10'), ('1', '12'), ('1', '13'), ('1', '14'), ('1', '15'), ('1', '16'), ('1', '17'), ('1', '21'), ('1', '22'), ('1', '23'), ('2', '1'), ('2', '8'), ('3', '2'), ('3', '7'), ('3', '9'), ('4', '1'), ('4', '2'), ('4', '5'), ('4', '6'), ('4', '7'), ('4', '8'), ('4', '9');
 COMMIT;
 
 -- ----------------------------
@@ -109,20 +109,10 @@ CREATE TABLE `sys_user_role` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
---  Table structure for `tab_published`
+--  Records of `sys_user_role`
 -- ----------------------------
-DROP TABLE IF EXISTS `tab_published`;
-CREATE TABLE `tab_published` (
-  `published_id` int(11) NOT NULL COMMENT '发布ID',
-  `user_id` int(11) NOT NULL COMMENT '用户ID',
-  `published_title` varchar(255) NOT NULL COMMENT '发布主题',
-  `published_location` varchar(150) DEFAULT NULL COMMENT '发布位置',
-  `published_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发布时间',
-  `published_type` int(4) NOT NULL COMMENT '发布类型: 1认领  2寻物',
-  `remark` varchar(120) DEFAULT NULL COMMENT '备注',
-  `picture_url` varchar(255) DEFAULT NULL COMMENT '头像',
-  `state` int(4) NOT NULL DEFAULT '0' COMMENT '状态 0正常 -1废弃',
-  PRIMARY KEY (`published_id`,`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='发布表';
+BEGIN;
+INSERT INTO `sys_user_role` VALUES ('1', '1');
+COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;

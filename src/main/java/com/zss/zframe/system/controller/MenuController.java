@@ -7,148 +7,127 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.druid.util.StringUtils;
 import com.zss.zframe.base.BaseController;
-import com.zss.zframe.base.ObjectHttpRes;
+import com.zss.zframe.base.DataRes;
 import com.zss.zframe.system.bean.Menu;
 import com.zss.zframe.system.service.MenuService;
 import com.zss.zframe.utils.JsonUtils;
 
 /**
  * 系统菜单接口
+ * 
  * @author zm
  */
 @Controller
 @RequestMapping("/system")
 public class MenuController extends BaseController {
-	
+
 	@Resource
 	private MenuService service;
 
 	@RequestMapping("selectAllMenus.do")
 	@ResponseBody
-	public String selectAllMenus(HttpServletRequest request, HttpSession session) throws Exception {
+	public String selectAllMenus(HttpServletRequest request) {
 		getHashMap(request);
-		log.info("-------- session = " + session.getId());
-		ObjectHttpRes res = new ObjectHttpRes();
+		DataRes res = new DataRes();
 		List<Menu> info = service.selectAllMenus(reqMap);
 		if (info == null) {
 			info = new ArrayList<Menu>();
 		}
-		res.setResult(info);
+		res.setData(info);
 		return JsonUtils.objToJackson(res);
 	}
-	
+
 	@RequestMapping("selectTreeMenus.do")
 	@ResponseBody
-	public String selectTreeMenus(HttpServletRequest request, HttpSession session) throws Exception {
+	public String selectTreeMenus(HttpServletRequest request) {
 		getHashMap(request);
-		ObjectHttpRes res = new ObjectHttpRes();
+		DataRes res = new DataRes();
 		List<Menu> info = service.selectTreeMenus(reqMap);
 		if (info == null) {
 			info = new ArrayList<Menu>();
 		}
-		res.setResult(info);
+		res.setData(info);
 		return JsonUtils.objToJackson(res);
 	}
-	
+
 	@RequestMapping("selectListMenuByPId.do")
 	@ResponseBody
-	public String selectListMenuByPId(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String selectListMenuByPId(HttpServletRequest request) {
 		getHashMap(request);
-		String parent_id = getMapValue("parent_id");
+		String parent_id = getReqValue("parent_id");
 		if (StringUtils.isEmpty(parent_id)) {
 			parent_id = "0";
 		}
-		ObjectHttpRes res = new ObjectHttpRes();
+		DataRes res = new DataRes();
 		List<Menu> info = service.selectListMenuByPId(parent_id);
-		if(info == null){
+		if (info == null) {
 			info = new ArrayList<Menu>();
 		}
-		res.setResult(info);
+		res.setData(info);
 		return JsonUtils.objToJackson(res);
 	}
-	
+
 	@RequestMapping("selectMenuById.do")
 	@ResponseBody
-	public String selectMenuById(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String selectMenuById(HttpServletRequest request) {
 		getHashMap(request);
-		if (!checkParamEmpty("menu_id")) {
-			return getErrorMsg();
-		}
-		ObjectHttpRes res = new ObjectHttpRes();
-		Menu Menu = service.selectMenuById(getMapValue("menu_id"));
-		if(Menu == null){
+		checkParamEmpty("menu_id");
+		DataRes res = new DataRes();
+		Menu Menu = service.selectMenuById(getReqValue("menu_id"));
+		if (Menu == null) {
 			Menu = new Menu();
 		}
-		res.setResult(Menu);
+		res.setData(Menu);
 		return JsonUtils.objToJackson(res);
 	}
-	
+
 	@RequestMapping("insertMenu.do")
 	@ResponseBody
-	public String insertMenu(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String insertMenu(HttpServletRequest request) {
 		getHashMap(request);
-		if (!checkParamEmpty("menu_name")) {
-			return getErrorMsg();
-		}
-		if (!checkParamEmpty("menu_url")) {
-			return getErrorMsg();
-		}
-		if (!checkParamEmpty("parent_id")) {
-			return getErrorMsg();
-		}
-		ObjectHttpRes res = new ObjectHttpRes();
+		checkParamEmpty("menu_name");
+		checkParamEmpty("menu_url");
+		checkParamEmpty("parent_id");
+		DataRes res = new DataRes();
 		HashMap<String, Object> map = service.insertMenu(reqMap);
-		res.setResult(map);
+		res.setData(map);
 		return JsonUtils.objToJackson(res);
 	}
-	
+
 	@RequestMapping("updateMenu.do")
 	@ResponseBody
-	public String updateMenu(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String updateMenu(HttpServletRequest request) {
 		getHashMap(request);
-		if (!checkParamEmpty("menu_id")) {
-			return getErrorMsg();
-		}
-		if (!checkParamEmpty("menu_name")) {
-			return getErrorMsg();
-		}
-		if (!checkParamEmpty("menu_url")) {
-			return getErrorMsg();
-		}
-		if (!checkParamEmpty("parent_id")) {
-			return getErrorMsg();
-		}
-		ObjectHttpRes res = new ObjectHttpRes();
+		checkParamEmpty("menu_id");
+		checkParamEmpty("menu_name");
+		checkParamEmpty("menu_url");
+		checkParamEmpty("parent_id");
+		DataRes res = new DataRes();
 		int count = service.updateMenu(reqMap);
-		Map<String, Object> map = new HashMap<>(); 
+		Map<String, Object> map = new HashMap<>();
 		map.put("record_cnt", count);
-		res.setResult(map);
+		res.setData(map);
 		return JsonUtils.objToJackson(res);
 	}
-	
+
 	@RequestMapping("deleteMenu.do")
 	@ResponseBody
-	public String deleteMenu(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String deleteMenu(HttpServletRequest request) {
 		getHashMap(request);
-		if (!checkParamEmpty("menu_id")) {
-			return getErrorMsg();
-		}
-		ObjectHttpRes res = new ObjectHttpRes();
-		int count = service.deleteMenu(getMapValue("menu_id"));
-		Map<String, Object> map = new HashMap<>(); 
+		checkParamEmpty("menu_id");
+		DataRes res = new DataRes();
+		int count = service.deleteMenu(getReqValue("menu_id"));
+		Map<String, Object> map = new HashMap<>();
 		map.put("record_cnt", count);
-		res.setResult(map);
+		res.setData(map);
 		return JsonUtils.objToJackson(res);
 	}
-	
+
 }
