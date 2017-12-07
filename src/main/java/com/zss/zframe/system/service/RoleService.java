@@ -13,7 +13,9 @@ import com.zss.zframe.system.bean.Role;
  */
 public interface RoleService {
 
-	public PageInfo<List<Role>> selectAllRoles(int page_index, int page_size, HashMap<String, Object> map);
+	public PageInfo<Role> selectPageRoles(int page_index, int page_size, HashMap<String, Object> map);
+	
+	public List<Role> selectAllRoles(HashMap<String, Object> map);
 	
 	public Role selectRoleById(String role_id);
 	

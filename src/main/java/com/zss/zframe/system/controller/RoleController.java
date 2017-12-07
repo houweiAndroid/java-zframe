@@ -30,19 +30,16 @@ public class RoleController extends BaseController {
 	@Resource
 	private RoleService service;
 
-	@RequestMapping("selectAllRoles.do")
+	@RequestMapping("selectPageRoles")
 	@ResponseBody
-	public String selectAllRoles(HttpServletRequest request) {
+	public String selectPageRoles(HttpServletRequest request) {
 		getHashMap(request);
 		checkParamEmpty("page_index");
 		checkParamEmpty("page_size");
 		DataRes res = new DataRes();
-		PageInfo<List<Role>> info = service.selectAllRoles(
+		PageInfo<Role> info = service.selectPageRoles(
 				Integer.parseInt(getReqValue("page_index")),
 				Integer.parseInt(getReqValue("page_size")), reqMap);
-		if (info == null) {
-			info = new PageInfo<List<Role>>();
-		}
 		Map<String, Object> map = new HashMap<>(); 
 		map.put("totalCount", info.getTotal());
 		map.put("list", info.getList());
@@ -50,21 +47,28 @@ public class RoleController extends BaseController {
 		return JsonUtils.objToJackson(res);
 	}
 	
-	@RequestMapping("selectRoleById.do")
+	@RequestMapping("selectAllRoles")
+	@ResponseBody
+	public String selectAllRoles(HttpServletRequest request) {
+		getHashMap(request);
+		DataRes res = new DataRes();
+		List<Role> list = service.selectAllRoles(reqMap);
+		res.setData(list);
+		return JsonUtils.objToJackson(res);
+	}
+	
+	@RequestMapping("selectRoleById")
 	@ResponseBody
 	public String selectRoleById(HttpServletRequest request) {
 		getHashMap(request);
 		checkParamEmpty("role_id");
 		DataRes res = new DataRes();
 		Role role = service.selectRoleById(getReqValue("role_id"));
-		if(role == null){
-			role = new Role();
-		}
 		res.setData(role);
 		return JsonUtils.objToJackson(res);
 	}
 	
-	@RequestMapping("insertRole.do")
+	@RequestMapping("insertRole")
 	@ResponseBody
 	public String insertRole(HttpServletRequest request) {
 		getHashMap(request);
@@ -76,7 +80,7 @@ public class RoleController extends BaseController {
 		return JsonUtils.objToJackson(res);
 	}
 	
-	@RequestMapping("updateRole.do")
+	@RequestMapping("updateRole")
 	@ResponseBody
 	public String updateRole(HttpServletRequest request) {
 		getHashMap(request);
@@ -91,7 +95,7 @@ public class RoleController extends BaseController {
 		return JsonUtils.objToJackson(res);
 	}
 	
-	@RequestMapping("deleteRole.do")
+	@RequestMapping("deleteRole")
 	@ResponseBody
 	public String deleteRole(HttpServletRequest request) {
 		getHashMap(request);

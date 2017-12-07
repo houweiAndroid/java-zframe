@@ -4,9 +4,9 @@
 	<!-- 文件输出格式 -->
 	<property name="PATTERN" value="%-12(%d{yyyy-MM-dd HH:mm:ss.SSS}) |-%-5level [%thread] %c [%L] -| %msg%n" />
 	<!-- test文件路径 -->
-	<property name="TEST_FILE_PATH" value="/opt/zframe/logs" />
+	<property name="TEST_FILE_PATH" value="/zframe/heshi/logs" />
 	<!-- pro文件路径 -->
-	<property name="PRO_FILE_PATH" value="/opt/zframe/logs" />
+	<property name="PRO_FILE_PATH" value="/zframe/heshi/logs" />
 
 	<!-- 开发环境 -->
 	<springProfile name="dev">
@@ -16,7 +16,7 @@
 			</encoder>
 		</appender>
 		
-		<logger name="com.zss.zframe" level="debug"/>
+		<logger name="com.zss.zframe" level="info"/>
 
 		<root level="info">
 			<appender-ref ref="CONSOLE" />
@@ -28,7 +28,7 @@
 		<!-- 每天产生一个文件 -->
 		<appender name="TEST-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 			<!-- 文件路径 -->
-			<file>${TEST_FILE_PATH}</file>
+			<file>${TEST_FILE_PATH}/heshi.log</file>
 			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 				<!-- 文件名称 -->
 				<fileNamePattern>${TEST_FILE_PATH}/info.%d{yyyy-MM-dd}.log</fileNamePattern>
@@ -49,7 +49,7 @@
 	<!-- 生产环境 -->
 	<springProfile name="prod">
 		<appender name="PROD_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-			<file>${PRO_FILE_PATH}</file>
+			<file>${PRO_FILE_PATH}/heshi.log</file>
 			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 				<fileNamePattern>${PRO_FILE_PATH}/warn.%d{yyyy-MM-dd}.log</fileNamePattern>
 				<MaxHistory>100</MaxHistory>
@@ -58,7 +58,6 @@
 				<pattern>${PATTERN}</pattern>
 			</layout>
 		</appender>
-		
 		<root level="warn">
 			<appender-ref ref="PROD_FILE" />
 		</root>

@@ -15,10 +15,34 @@
 		<result column="email" property="email" />
 		<result column="phone" property="phone" />
 		<result column="remark" property="remark" />
+		<collection property="roles" ofType="com.zss.zframe.system.bean.Role">
+			<id column="role_id" property="role_id" />
+			<result column="role_name" property="role_name" />
+		</collection>
 	</resultMap>
+	
+	<select id="selectUserCount" parameterType="java.util.HashMap" resultType="Integer">
+		select
+		count(0)
+		from
+		sys_user
+		where
+		state != -1
+		and user_name!='admin'
+		<if test="name != null and name != ''">
+			and 
+			(
+				user_name like concat(concat('%', #{name}),'%')
+				or 
+				real_name like concat(concat('%', #{name}),'%') 
+			)
+		</if>
+	</select>
 
 	<!-- 用户所有列表 -->
 	<select id="selectAllUsers" parameterType="java.util.HashMap" resultMap="UserObject">
+		select ta.*, tc.role_id, tc.role_name from 
+		(
 		select
 		user_id,
 		user_name,
@@ -43,6 +67,13 @@
 				real_name like concat(concat('%', #{name}),'%') 
 			)
 		</if>
+		) as ta
+		left join
+		sys_user_role as tb 
+		on ta.user_id = tb.user_id
+		left join
+		sys_role as tc
+		on tb.role_id = tc.role_id
 	</select>
 
 	<!-- 获取用户 -->
@@ -130,4 +161,23 @@
 		sys_user
 		where user_name=#{user_name}
 	</select>
+	
+	<!-- 新增用户角色中间表 -->
+	<insert id="insertUserRole" parameterType="java.util.HashMap" >
+		insert into sys_user_role (
+		user_id,
+		role_id
+		) values (
+		#{user_id},
+		#{role_id}
+		)
+	</insert>
+
+	<!-- 删除用户角色中间表 -->
+	<delete id="deleteUserRole" parameterType="String">
+		delete from sys_user_role
+		where
+		user_id=#{user_id}
+	</delete>
+	
 </mapper>

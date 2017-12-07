@@ -8,7 +8,7 @@ public class ZframeApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ZframeApplication.class, args);
-		Constants.init();
+		AppConst.init();
 	}
 	
 }

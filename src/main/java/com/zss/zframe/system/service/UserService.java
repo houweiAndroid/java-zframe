@@ -1,7 +1,6 @@
 package com.zss.zframe.system.service;
 
 import java.util.HashMap;
-import java.util.List;
 
 import com.github.pagehelper.PageInfo;
 import com.zss.zframe.system.bean.User;
@@ -13,7 +12,7 @@ import com.zss.zframe.system.bean.User;
  */
 public interface UserService {
 
-	public PageInfo<List<User>> selectAllUsers(int page_index, int page_size, HashMap<String, Object> map);
+	public PageInfo<User> selectPageUsers(int page_index, int page_size, HashMap<String, Object> map);
 	
 	public User selectUserById(String user_id);
 	

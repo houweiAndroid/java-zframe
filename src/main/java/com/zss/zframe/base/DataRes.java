@@ -1,18 +1,18 @@
 package com.zss.zframe.base;
 
-import com.zss.zframe.Constants;
+import com.zss.zframe.AppConst;
 
 public class DataRes{
 	
-	public String code = "0";
+	public Integer code = 0;
 	public String error = ""; 
-	public Object data = null;
+	public Object data = "";
 
-	public String getCode() {
+	public Integer getCode() {
 		return code;
 	}
 
-	public void setCode(String code) {
+	public void setCode(Integer code) {
 		this.code = code;
 	}
 
@@ -24,9 +24,9 @@ public class DataRes{
 		this.error = error;
 	}
 	
-	public void setCodeAndError(String code) {
+	public void setCodeAndError(Integer code) {
 		this.code = code;
-		String errorStr = Constants.getError(code);
+		String errorStr = AppConst.getError(code);
 		setError(errorStr);
 	}
 

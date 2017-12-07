@@ -12,12 +12,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.druid.util.StringUtils;
 import com.zss.zframe.base.BaseController;
 import com.zss.zframe.base.DataRes;
 import com.zss.zframe.system.bean.Menu;
 import com.zss.zframe.system.service.MenuService;
 import com.zss.zframe.utils.JsonUtils;
+import com.zss.zframe.utils.StrUtils;
 
 /**
  * 系统菜单接口
@@ -31,7 +31,7 @@ public class MenuController extends BaseController {
 	@Resource
 	private MenuService service;
 
-	@RequestMapping("selectAllMenus.do")
+	@RequestMapping("selectAllMenus")
 	@ResponseBody
 	public String selectAllMenus(HttpServletRequest request) {
 		getHashMap(request);
@@ -44,7 +44,7 @@ public class MenuController extends BaseController {
 		return JsonUtils.objToJackson(res);
 	}
 
-	@RequestMapping("selectTreeMenus.do")
+	@RequestMapping("selectTreeMenus")
 	@ResponseBody
 	public String selectTreeMenus(HttpServletRequest request) {
 		getHashMap(request);
@@ -57,12 +57,12 @@ public class MenuController extends BaseController {
 		return JsonUtils.objToJackson(res);
 	}
 
-	@RequestMapping("selectListMenuByPId.do")
+	@RequestMapping("selectListMenuByPId")
 	@ResponseBody
 	public String selectListMenuByPId(HttpServletRequest request) {
 		getHashMap(request);
 		String parent_id = getReqValue("parent_id");
-		if (StringUtils.isEmpty(parent_id)) {
+		if (StrUtils.isEmpty(parent_id)) {
 			parent_id = "0";
 		}
 		DataRes res = new DataRes();
@@ -74,7 +74,7 @@ public class MenuController extends BaseController {
 		return JsonUtils.objToJackson(res);
 	}
 
-	@RequestMapping("selectMenuById.do")
+	@RequestMapping("selectMenuById")
 	@ResponseBody
 	public String selectMenuById(HttpServletRequest request) {
 		getHashMap(request);
@@ -88,7 +88,7 @@ public class MenuController extends BaseController {
 		return JsonUtils.objToJackson(res);
 	}
 
-	@RequestMapping("insertMenu.do")
+	@RequestMapping("insertMenu")
 	@ResponseBody
 	public String insertMenu(HttpServletRequest request) {
 		getHashMap(request);
@@ -101,7 +101,7 @@ public class MenuController extends BaseController {
 		return JsonUtils.objToJackson(res);
 	}
 
-	@RequestMapping("updateMenu.do")
+	@RequestMapping("updateMenu")
 	@ResponseBody
 	public String updateMenu(HttpServletRequest request) {
 		getHashMap(request);
@@ -117,7 +117,7 @@ public class MenuController extends BaseController {
 		return JsonUtils.objToJackson(res);
 	}
 
-	@RequestMapping("deleteMenu.do")
+	@RequestMapping("deleteMenu")
 	@ResponseBody
 	public String deleteMenu(HttpServletRequest request) {
 		getHashMap(request);

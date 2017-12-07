@@ -19,9 +19,17 @@ public class RoleServiceImpl implements RoleService{
 	public RoleMapper roleMapper;
 	
 	@Override
-	public PageInfo<List<Role>> selectAllRoles(int page_index, int page_size, HashMap<String, Object> map) {
-		 PageHelper.startPage(page_index, page_size);
-		 return new PageInfo(roleMapper.selectAllRoles(map));
+	public PageInfo<Role> selectPageRoles(int page_index, int page_size, HashMap<String, Object> map) {
+		 int count = roleMapper.selectRoleCount(map);
+		 PageHelper.startPage(page_index, page_size, false);
+		 PageInfo<Role> info = new PageInfo<Role>(roleMapper.selectAllRoles(map));
+		 info.setTotal(count);
+		 return info;
+	}
+	
+	@Override
+	public List<Role> selectAllRoles(HashMap<String, Object> map) {
+		return roleMapper.selectAllRoles(map);
 	}
 
 	@Override
@@ -49,7 +57,7 @@ public class RoleServiceImpl implements RoleService{
 	@Override
 	public int updateRole(HashMap<String, Object> map) {
 		int cnt = roleMapper.updateRole(map);
-		String roleId = map.get("role_id").toString();
+		String roleId = (String) map.get("role_id");
 		roleMapper.deleteRoleMenu(roleId);
 		String menuIds = map.get("menu_ids").toString();
 		String menuArr[] = menuIds.split(",");

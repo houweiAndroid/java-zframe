@@ -19,6 +19,7 @@ public class User {
 	private String email; //邮箱
 	private String phone; //手机
 	private String remark; //备注
+	private List<Role> roles; //用户角色
 	private List<Menu> menus; //用户权限菜单
 	
 	public String getUser_id() {
@@ -86,6 +87,12 @@ public class User {
 	}
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+	public List<Role> getRoles() {
+		return roles;
+	}
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
 	}
 	public List<Menu> getMenus() {
 		return menus;

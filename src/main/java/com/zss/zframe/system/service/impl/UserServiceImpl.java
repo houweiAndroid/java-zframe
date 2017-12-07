@@ -1,7 +1,6 @@
 package com.zss.zframe.system.service.impl;
 
 import java.util.HashMap;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,9 +19,12 @@ public class UserServiceImpl implements UserService{
 	public UserMapper userMapper;
 	
 	@Override
-	public PageInfo<List<User>> selectAllUsers(int page_index, int page_size, HashMap<String, Object> map) {
-		 PageHelper.startPage(page_index, page_size);
-		 return new PageInfo(userMapper.selectAllUsers(map));
+	public PageInfo<User> selectPageUsers(int page_index, int page_size, HashMap<String, Object> map) {
+		 int count = userMapper.selectUserCount(map);
+		 PageHelper.startPage(page_index, page_size, false);
+		 PageInfo<User> info = new PageInfo<User>(userMapper.selectAllUsers(map));
+		 info.setTotal(count);
+		 return info;
 	}
 
 	@Override
@@ -34,12 +36,34 @@ public class UserServiceImpl implements UserService{
 	@Transactional()
 	public HashMap<String, Object> insertUser(HashMap<String, Object> map) {
 		userMapper.insertUser(map);
+		Long userId = (Long) map.get("user_id");
+		if(userId > 0){
+			String roleIds = map.get("role_ids").toString();
+			String roleArr[] = roleIds.split(",");
+			for(String item: roleArr){
+				HashMap<String, Object> roleMap = new HashMap<>();
+				roleMap.put("user_id", userId);
+				roleMap.put("role_id", item);
+				userMapper.insertUserRole(roleMap);
+			}
+		}
 		return map;
 	}
 
 	@Override
 	public int updateUser(HashMap<String, Object> map) {
-		return userMapper.updateUser(map);
+		int cnt = userMapper.updateUser(map);
+		String userId = (String) map.get("user_id");
+		userMapper.deleteUserRole(userId);
+		String roleIds = map.get("role_ids").toString();
+		String roleArr[] = roleIds.split(",");
+		for(String item: roleArr){
+			HashMap<String, Object> roleMap = new HashMap<>();
+			roleMap.put("user_id", userId);
+			roleMap.put("role_id", item);
+			userMapper.insertUserRole(roleMap);
+		}
+		return cnt;
 	}
 
 	@Override

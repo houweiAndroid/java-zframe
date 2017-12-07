@@ -12,9 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.druid.util.StringUtils;
 import com.github.pagehelper.PageInfo;
-import com.zss.zframe.Constants;
 import com.zss.zframe.base.BaseController;
 import com.zss.zframe.base.DataRes;
 import com.zss.zframe.system.bean.Menu;
@@ -22,6 +20,7 @@ import com.zss.zframe.system.bean.User;
 import com.zss.zframe.system.service.MenuService;
 import com.zss.zframe.system.service.UserService;
 import com.zss.zframe.utils.JsonUtils;
+import com.zss.zframe.utils.StrUtils;
 
 
 /**
@@ -40,19 +39,16 @@ public class UserController extends BaseController {
 	@Resource
 	private MenuService menuService;
 
-	@RequestMapping("selectAllUsers.do")
+	@RequestMapping("selectPageUsers")
 	@ResponseBody
-	public String selectAllUsers(HttpServletRequest request) {
+	public String selectPageUsers(HttpServletRequest request) {
 		getHashMap(request);
 		checkParamEmpty("page_index");
 		checkParamEmpty("page_size");
 		DataRes res = new DataRes();
-		PageInfo<List<User>> info = service.selectAllUsers(
+		PageInfo<User> info = service.selectPageUsers(
 				Integer.parseInt(getReqValue("page_index")),
 				Integer.parseInt(getReqValue("page_size")), reqMap);
-		if (info == null) {
-			info = new PageInfo<List<User>>();
-		}
 		Map<String, Object> map = new HashMap<>(); 
 		map.put("totalCount", info.getTotal());
 		map.put("list", info.getList());
@@ -60,7 +56,7 @@ public class UserController extends BaseController {
 		return JsonUtils.objToJackson(res);
 	}
 	
-	@RequestMapping("selectUserById.do")
+	@RequestMapping("selectUserById")
 	@ResponseBody
 	public String selectUserById(HttpServletRequest request) {
 		getHashMap(request);
@@ -74,26 +70,28 @@ public class UserController extends BaseController {
 		return JsonUtils.objToJackson(res);
 	}
 	
-	@RequestMapping("insertUser.do")
+	@RequestMapping("insertUser")
 	@ResponseBody
 	public String insertUser(HttpServletRequest request) {
 		getHashMap(request);
 		checkParamEmpty("user_name");
-		if (StringUtils.isEmpty(getReqValue("password"))) {
+		if (StrUtils.isEmpty(getReqValue("password"))) {
 			reqMap.put("password", intPwd);
 		}
+		checkParamEmpty("role_ids");
 		DataRes res = new DataRes();
 		HashMap<String, Object> map = service.insertUser(reqMap);
 		res.setData(map);
 		return JsonUtils.objToJackson(res);
 	}
 	
-	@RequestMapping("updateUser.do")
+	@RequestMapping("updateUser")
 	@ResponseBody
 	public String updateUser(HttpServletRequest request) {
 		getHashMap(request);
 		checkParamEmpty("user_id");
 		checkParamEmpty("user_name");
+		checkParamEmpty("role_ids");
 		DataRes res = new DataRes();
 		int count = service.updateUser(reqMap);
 		Map<String, Object> map = new HashMap<>(); 
@@ -102,7 +100,7 @@ public class UserController extends BaseController {
 		return JsonUtils.objToJackson(res);
 	}
 	
-	@RequestMapping("deleteUser.do")
+	@RequestMapping("deleteUser")
 	@ResponseBody
 	public String deleteUser(HttpServletRequest request) {
 		getHashMap(request);
@@ -115,7 +113,7 @@ public class UserController extends BaseController {
 		return JsonUtils.objToJackson(res);
 	}
 	
-	@RequestMapping("sysLogin.do")
+	@RequestMapping("sysLogin")
 	@ResponseBody
 	public String sysLogin(HttpServletRequest request) {
 		getHashMap(request);
@@ -133,15 +131,15 @@ public class UserController extends BaseController {
 				res.setData(user);
 				return JsonUtils.objToJackson(res);
 			} else{
-				res.setCodeAndError(Constants.PWD_ERROR);
+				res.setCodeAndError(1002);
 				return JsonUtils.objToJackson(res);
 			}
 		}
-		res.setCodeAndError(Constants.USER_NOT_EXIST);
+		res.setCodeAndError(1003);
 		return JsonUtils.objToJackson(res);
 	}
 	
-	@RequestMapping("isLogin.do")
+	@RequestMapping("isLogin")
 	@ResponseBody
 	public String isLogin(HttpServletRequest request) {
 		DataRes res = new DataRes();
@@ -152,7 +150,7 @@ public class UserController extends BaseController {
 			res.setData(user);
 			return JsonUtils.objToJackson(res);
 		} else {
-			res.setCodeAndError(Constants.LOGIN_TIMEOUT);
+			res.setCodeAndError(1004);
 			return JsonUtils.objToJackson(res);
 		}
 	}

@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.zss.zframe.Constants;
+import com.zss.zframe.AppConst;
 import com.zss.zframe.utils.JsonUtils;
 
 
@@ -22,8 +22,8 @@ public HashMap<String, Object> reqMap = new HashMap<>();
 
 	public String buildError(String paramName) {
 		DataRes result = new DataRes();
-		result.setCode(Constants.REQ_PARAM_NULL);
-		String msg = Constants.getError(Constants.REQ_PARAM_NULL);
+		result.setCode(1001);
+		String msg = AppConst.getError(1001);
 		String error = String.format(msg, paramName);
 		result.setError(error);
 		return JsonUtils.objToJackson(result);

@@ -172,4 +172,5 @@
 		left join sys_menu c on b.menu_id = c.menu_id
 		where c.state != -1;
 	</select>
+	
 </mapper>
